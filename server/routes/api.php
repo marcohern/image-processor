@@ -13,6 +13,10 @@ use Illuminate\Http\Request;
 |
 */
 
+Route::resource('images','ImageController');
+Route::post('images/upload','ImageController@upload');
+Route::post('images/attach','ImageController@attach');
+
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });

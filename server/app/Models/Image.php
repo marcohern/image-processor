@@ -92,7 +92,7 @@ class Image extends Model
             ->where('profile', $profile)
             ->where('density', $density)
             ->first();
-        if (empty($image)) {
+        if (empty($record)) {
             $record = $this->select('bytes')
                 ->where('domain' , $domain)
                 ->where('slug'   , $slug)
@@ -101,7 +101,7 @@ class Image extends Model
                 ->where('density', 'org')
                 ->first();
 
-            if (empty($image)) {
+            if (empty($record)) {
                 throw new \Exception("Image not found");
             }
 
@@ -119,7 +119,8 @@ class Image extends Model
                 'width' => $size[0],
                 'height' => $size[1],
                 'parent_id' => $record->id,
-                'created_at' => new \Datetime("now")
+                'created_at' => new \Datetime("now"),
+                'bytes' => $bytes
             ]);
 
         } else {

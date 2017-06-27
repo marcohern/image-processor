@@ -1,4 +1,6 @@
 <?php
+namespace App\Lib;
+
 
 class Dpi {
     public static function size($profile, $density) {

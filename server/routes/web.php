@@ -11,6 +11,8 @@
 |
 */
 
+Route::get('/i/{domain}/{profile}/{density}/{slug}/{index}', 'ImageController@display_all');
+
 Route::get('/', function () {
     return view('welcome');
 });
