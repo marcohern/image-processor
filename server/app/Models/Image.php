@@ -56,28 +56,25 @@ class Image extends Model
         return $image;
     }
 
-     public function attach($ids, $domain, $slug) {
+    private function attachSingle($id, $domain, $slug, $index) {
+        return $this->where('id',$id)->update([
+            'domain' => $domain,
+            'slug' => $slug,
+            'index' => $index,
+            'attached' => 'TRUE',
+            'updated_at' => new \Datetime("now")
+        ]);
+    }
+
+    public function attach($ids, $domain, $slug) {
         $i=0;
         if (is_array($ids)) {
             foreach ($ids as $id) {
-                $this->where('id',$id)->update([
-                    'domain' => $domain,
-                    'slug' => $slug,
-                    'index' => $i,
-                    'attached' => 'TRUE',
-                    'updated_at' => new \Datetime("now")
-                ]);
-                $i++;
+                $this->attachSingle($id, $domain, $slug, $i++);
             }
         } else {
             $i=1;
-            $this->where('id',$ids)->update([
-                'domain' => $domain,
-                'slug' => $slug,
-                'index' => 0,
-                'attached' => 'TRUE',
-                'updated_at' => new \Datetime("now")
-            ]);
+            $this->attachSingle($id, $domain, $slug, 0);
         }
         return $i;
     }
@@ -127,5 +124,12 @@ class Image extends Model
             $bytes = $record->bytes;
         }
         return $bytes;
+    }
+
+    public function erase($id) {
+        $record = $this->where('id',$id)->first();
+        if (empty($record)) throw new \Exception("Image not found");
+        $this->where('id',$id)->delete();
+        return $record;
     }
 }
