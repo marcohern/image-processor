@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\ImageProcesor;
 
-use App\Lib\Dpi;
+use App\Exceptions\ImageProcesor\ImageNotFoundException;
+use App\Lib\ImageProcesor\Dpi;
 use Illuminate\Database\Eloquent\Model;
 use InterventionImage;
 
@@ -23,13 +24,13 @@ class Image extends Model
 
     public function view($id) {
         $image = $this->where('id',$id)->first();
-        if (empty($image)) throw new \Exception("Image not found");
+        if (empty($image)) throw new ImageNotFoundException("Image not found");
         return $image;
     }
 
     public function bytes($id) {
         $image = $this->select('bytes')->where('id',$id)->first();
-        if (empty($image)) throw new \Exception("Image not found");
+        if (empty($image)) throw new ImageNotFoundException("Image not found");
         return $image->bytes;
     }
 
@@ -74,7 +75,7 @@ class Image extends Model
             }
         } else {
             $i=1;
-            $this->attachSingle($id, $domain, $slug, 0);
+            $this->attachSingle($ids, $domain, $slug, 0);
         }
         return $i;
     }
@@ -82,7 +83,7 @@ class Image extends Model
     public function display($slug, $domain='global', $index=0,$profile='org',$density='org') {
         $bytes = null;
         $ext = 'jpg';
-        $record = $this->select('bytes')
+        $record = $this->select(['id','bytes'])
             ->where('domain' , $domain)
             ->where('slug'   , $slug)
             ->where('index'  , $index)
@@ -90,7 +91,7 @@ class Image extends Model
             ->where('density', $density)
             ->first();
         if (empty($record)) {
-            $record = $this->select('bytes')
+            $record = $this->select(['id','bytes'])
                 ->where('domain' , $domain)
                 ->where('slug'   , $slug)
                 ->where('index'  , $index)
@@ -99,12 +100,12 @@ class Image extends Model
                 ->first();
 
             if (empty($record)) {
-                throw new \Exception("Image not found");
+                throw new ImageNotFoundException("Image not found");
             }
 
             $size = Dpi::size($profile,$density);
 
-            $image = InterventionImage::make($record['bytes'])->fit($size[0],$size[1]);
+            $image = InterventionImage::make($record->bytes)->fit($size[0],$size[1]);
             $bytes = $image->encode($ext);
             $this->insertGetId([
                 'domain' => $domain,
@@ -128,7 +129,7 @@ class Image extends Model
 
     public function erase($id) {
         $record = $this->where('id',$id)->first();
-        if (empty($record)) throw new \Exception("Image not found");
+        if (empty($record)) throw new ImageNotFoundException("Image not found");
         $this->where('id',$id)->delete();
         return $record;
     }

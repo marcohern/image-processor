@@ -11,14 +11,14 @@ class ImageSeeder extends Seeder
      */
     public function run()
     {
-        $path = base_path().'/database/seeds/images';
+        $path = base_path().'/database/seeds/ImageProcesor/images';
         $files = [
             'helix_nebula',
             'big_ben'
         ];
         $n = count($files);
 
-        $model = App::make(App\Models\Image::class);
+        $model = App::make(App\Models\ImageProcesor\Image::class);
         for ($i=0;$i<$n;$i++) {
             $file = $files[$i];
             $record = $model->create("$path/$file.jpg");

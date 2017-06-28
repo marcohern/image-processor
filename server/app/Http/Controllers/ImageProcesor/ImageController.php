@@ -1,15 +1,20 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\ImageProcesor;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
-use App\Models\Image;
+use App\Http\Controllers\Controller;
+use App\Models\ImageProcesor\Image;
 
 class ImageController extends Controller
 {
-    private $imm;
+    private $imm; // Image Model
 
+    /**
+     * Constructor
+     * @param App\Models\Image $imm Image Model
+     */
     public function __construct(Image $imm) {
         $this->middleware('api');
 
