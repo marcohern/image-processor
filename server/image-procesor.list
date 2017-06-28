@@ -1,0 +1,7 @@
+app/Exceptions/ImageProcesor
+app/Http/Controllers/ImageProcesor
+app/Lib/ImageProcesor
+app/Models/ImageProcesor
+database/migrations/2017_01_01_100000_create_image.php
+database/seeds/ImageProcesor
+config/dpi.php
