@@ -10,6 +10,10 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::pattern('index'  ,'\d+');
+Route::pattern('domain' , '[\w_-]+');
+Route::pattern('profile', '[\w_-]+');
+Route::pattern('density', '[\w_-]+');
 
 Route::get('/i/{domain}/{profile}/{density}/{slug}/{index}', 'ImageProcesor\ImageController@display_all');
 Route::get('/i/{domain}/{slug}/{index}'                    , 'ImageProcesor\ImageController@display_dsi');
